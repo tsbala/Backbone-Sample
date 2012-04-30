@@ -1,0 +1,3 @@
+** Sample app using Backbone **
+
+Aim is to create sample app using Backbone.js. I will be calling the Stackoverflow API and then rendering the results in an HTML page using Backbone
