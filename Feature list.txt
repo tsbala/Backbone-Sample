@@ -1,0 +1,5 @@
+Twitter api - product features
+
+1. Search for a user or term on Twitter and display the results returned.
+2. Able to save links in tweets to instapaper.
+3. Able to view images in tweets from flickr, yfrog etc.
