@@ -53,7 +53,7 @@ SearchTwitter.SearchTwitterView = Backbone.View.extend({
 		var tweetCollection = this.collection;
 		tweetCollection.reset();
 		if (searchTerm) {
-			$.getJSON(twitterSearchUrl + this.model.get('searchTerm') + '&callback=?', function(data) {
+			$.getJSON(twitterSearchUrl + encodeURIComponent(this.model.get('searchTerm')) + '&callback=?', function(data) {
 				for (var tweet in data.results) {
 					tweetCollection.add(data.results[tweet]);
 				} 
