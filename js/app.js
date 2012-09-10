@@ -11,12 +11,15 @@ SearchTwitter.SearchTerm = Backbone.Model.extend({
 	
 SearchTwitter.TweetCollection = Backbone.Collection.extend({
 });
+
+SearchTwitter.vent = _.extend({}, Backbone.Events);
 	
 SearchTwitter.TweetListView = Backbone.View.extend({
 	template: '#tweet',
 	tagName: 'ul',
 	initialize: function() {
 		this.template = $(this.template);
+		_.bindAll(this, 'renderTweet');
 		this.collection.bind('add', this.renderTweet, this);
 		this.collection.bind('reset', this.clearTweets, this);
 	},
@@ -24,6 +27,11 @@ SearchTwitter.TweetListView = Backbone.View.extend({
 	renderTweet: function(tweet) {
 		var html = _.template(this.template.html(), tweet.toJSON());
 		$(this.el).append(html);
+	},
+	
+	render: function() {
+		this.clearTweets();
+		this.collection.each(this.renderTweet);
 	},
 	
 	clearTweets: function() {
@@ -50,13 +58,9 @@ SearchTwitter.SearchTwitterView = Backbone.View.extend({
 	searchTwitter : function() {
 		var searchTerm = $('input').val();
 		var twitterSearchUrl = 'http://search.twitter.com/search.json?q=';
-		var tweetCollection = this.collection;
-		tweetCollection.reset();
 		if (searchTerm) {
 			$.getJSON(twitterSearchUrl + encodeURIComponent(this.model.get('searchTerm')) + '&callback=?', function(data) {
-				for (var tweet in data.results) {
-					tweetCollection.add(data.results[tweet]);
-				} 
+				SearchTwitter.vent.trigger('tweetsFound', data);
 			});
 		}
 		return false;		
@@ -71,9 +75,20 @@ SearchTwitter.SearchTwitterView = Backbone.View.extend({
 (function($) {
     var searchTerm = new SearchTwitter.SearchTerm();
 	var tweets = new SearchTwitter.TweetCollection();
-	var tweetListView = new SearchTwitter.TweetListView({ collection: tweets });
 	var searchTwitter = new SearchTwitter.SearchTwitterView({ model: searchTerm, collection: tweets });
 	searchTwitter.render();
+	
+	var tweetListView = new SearchTwitter.TweetListView({ collection: tweets });
+	
+	SearchTwitter.vent.bind('tweetsFound', function(data) {
+		var tweetsFound = new SearchTwitter.TweetCollection();
+		for (var tweet in data.results) {
+			tweetsFound.add(data.results[tweet]);
+		} 
+		tweetListView.collection = tweetsFound;
+		tweetListView.render();
+		$(tweetListView.el).appendTo($('div.container'));
+	});
+	
 	$(searchTwitter.el).appendTo($('div.container'));
-	$(tweetListView.el).appendTo($('div.container'));
 })(jQuery);
