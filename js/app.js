@@ -16,7 +16,7 @@ SearchTwitter.vent = _.extend({}, Backbone.Events);
 	
 SearchTwitter.TweetListView = Backbone.View.extend({
 	template: '#tweet',
-	tagName: 'ul',
+	id: 'tweets',
 	initialize: function() {
 		this.template = $(this.template);
 		_.bindAll(this, 'renderTweet');
@@ -59,7 +59,7 @@ SearchTwitter.SearchTwitterView = Backbone.View.extend({
 		var searchTerm = $('input').val();
 		var twitterSearchUrl = 'http://search.twitter.com/search.json?q=';
 		if (searchTerm) {
-			$.getJSON(twitterSearchUrl + encodeURIComponent(this.model.get('searchTerm')) + '&callback=?', function(data) {
+			$.getJSON(twitterSearchUrl + encodeURIComponent(this.model.get('searchTerm')) + '+exclude:retweets&callback=?', function(data) {
 				SearchTwitter.vent.trigger('tweetsFound', data);
 			});
 		}
