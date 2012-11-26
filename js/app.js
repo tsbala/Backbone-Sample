@@ -72,6 +72,16 @@ SearchTwitter.SearchTwitterView = Backbone.View.extend({
 	}
 });
 
+SearchTwitter.Routes = Backbone.Router.extend({
+	routes: {
+		"searchTwitter/:searchTerm" :  "searchTwitter"
+	},
+	
+	searchTwitter: function(searchTerm) {
+		new SearchTwitter.SearchTwitterView({ model: searchTerm});
+	}
+});
+
 (function($) {
     var searchTerm = new SearchTwitter.SearchTerm();
 	var tweets = new SearchTwitter.TweetCollection();
@@ -91,4 +101,8 @@ SearchTwitter.SearchTwitterView = Backbone.View.extend({
 	});
 	
 	$(searchTwitter.el).appendTo($('div.container'));
+	
+	new SearchTwitter.Router();
+	
+	Backbone.history.start();
 })(jQuery);
