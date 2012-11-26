@@ -47,7 +47,7 @@ SearchTwitter.SearchTwitterView = Backbone.View.extend({
 	},
 	
 	initialize: function() {
-		
+		_.bindAll(this, 'searchTwitter');
 	},
 	
 	searchTermChanged : function(e) {
