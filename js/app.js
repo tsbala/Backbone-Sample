@@ -56,9 +56,8 @@ SearchTwitter.SearchTwitterView = Backbone.View.extend({
 	},
 	
 	searchTwitter : function() {
-		var searchTerm = $('input').val();
 		var twitterSearchUrl = 'http://search.twitter.com/search.json?q=';
-		if (searchTerm) {
+		if (this.model.get('searchTerm')) {
 			$.getJSON(twitterSearchUrl + encodeURIComponent(this.model.get('searchTerm')) + '+exclude:retweets&callback=?', function(data) {
 				SearchTwitter.vent.trigger('tweetsFound', data);
 			});
@@ -78,17 +77,18 @@ SearchTwitter.Routes = Backbone.Router.extend({
 	},
 	
 	searchTwitter: function(searchTerm) {
-		new SearchTwitter.SearchTwitterView({ model: searchTerm});
+		var modelForTwitterSearch = new SearchTwitter.SearchTerm({ searchTerm: searchTerm});
+		new SearchTwitter.SearchTwitterView({ model: modelForTwitterSearch});
 	}
 });
 
 (function($) {
     var searchTerm = new SearchTwitter.SearchTerm();
 	var tweets = new SearchTwitter.TweetCollection();
-	var searchTwitter = new SearchTwitter.SearchTwitterView({ model: searchTerm, collection: tweets });
+	var searchTwitter = new SearchTwitter.SearchTwitterView({ model: searchTerm });
 	searchTwitter.render();
 	
-	var tweetListView = new SearchTwitter.TweetListView({ collection: tweets });
+	var tweetListView = new SearchTwitter.TweetListView({collection: tweets});
 	
 	SearchTwitter.vent.bind('tweetsFound', function(data) {
 		var tweetsFound = new SearchTwitter.TweetCollection();
