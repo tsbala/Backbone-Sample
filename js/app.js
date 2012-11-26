@@ -59,7 +59,7 @@ SearchTwitter.SearchTwitterView = Backbone.View.extend({
 		var twitterSearchUrl = 'http://search.twitter.com/search.json?q=';
 		var searchTerm = this.model.get('searchTerm');
 		if (searchTerm) {
-			$.getJSON(twitterSearchUrl + encodeURIComponent(searchTerm + '+exclude:retweets&callback=?', function(data) {
+			$.getJSON(twitterSearchUrl + encodeURIComponent(searchTerm + '+exclude:retweets&callback=?'), function(data) {
 				SearchTwitter.vent.trigger('tweetsFound', data, searchTerm);
 			});
 		}
