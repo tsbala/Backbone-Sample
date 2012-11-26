@@ -102,7 +102,7 @@ SearchTwitter.Routes = Backbone.Router.extend({
 	
 	$(searchTwitter.el).appendTo($('div.container'));
 	
-	new SearchTwitter.Router();
+	new SearchTwitter.Routes();
 	
 	Backbone.history.start();
 })(jQuery);
