@@ -73,14 +73,15 @@ SearchTwitter.SearchTwitterView = Backbone.View.extend({
 });
 
 SearchTwitter.Router = Backbone.Router.extend({
-	routes: {
-		"searchTwitter/:searchTerm" :  "searchTwitter"
-	},
-	
-	searchTwitter: function(searchTerm) {
-		var modelForTwitterSearch = new SearchTwitter.SearchTerm({ searchTerm: searchTerm});
-		new SearchTwitter.SearchTwitterView({ model: modelForTwitterSearch});
-	}
+    routes: {
+        "searchTwitter/:searchTerm": "searchTwitter"
+    },
+
+    searchTwitter: function (searchTerm) {
+        var modelForTwitterSearch = new SearchTwitter.SearchTerm({ searchTerm: searchTerm });
+        var searchTwitterRouter = new SearchTwitter.SearchTwitterView({ model: modelForTwitterSearch });
+        searchTwitterRouter.searchTwitter();
+    }
 });
 
 (function($) {
@@ -93,7 +94,7 @@ SearchTwitter.Router = Backbone.Router.extend({
 	
 	SearchTwitter.vent.bind('tweetsFound', function(data, searchTerm) {
 		var tweetsFound = new SearchTwitter.TweetCollection();
-		router.navigate("SearchTerm/" + searchTerm);
+		router.navigate("searchTwitter/" + searchTerm);
 		for (var tweet in data.results) {
 			tweetsFound.add(data.results[tweet]);
 		} 
